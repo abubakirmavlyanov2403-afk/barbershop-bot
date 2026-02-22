@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Онлайн запись{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4 text-center">Онлайн запись в барбершоп</h1>
+    
+    <div class="row">
+        <!-- Левая колонка: выбор мастера и услуги -->
+        <div class="col-md-4 col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-cut me-2"></i>Выбор мастера и услуги</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="masterSelect" class="form-label">Мастер</label>
+                        <select class="form-select" id="masterSelect">
+                            <option value="">-- Выберите мастера --</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serviceSelect" class="form-label">Услуга</label>
+                        <select class="form-select" id="serviceSelect" disabled>
+                            <option value="">-- Сначала выберите мастера --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-user me-2"></i>Ваши данные</h5>
+                </div>
+                <div class="card-body">
+                    {% if user.is_authenticated %}
+                        <p><strong>Имя:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                        <p><strong>Телефон:</strong> {{ user.phone|default:"Не указан" }}</p>
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Для записи необходимо <a href="{% url 'account_login' %}" class="alert-link">войти</a> или <a href="{% url 'account_signup' %}" class="alert-link">зарегистрироваться</a>.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Информация</h5>
+                </div>
+                <div class="card-body">
+                    <p><i class="fas fa-clock me-2"></i>Время работы: 9:00 - 21:00</p>
+                    <p><i class="fas fa-calendar-alt me-2"></i>Запись возможна на ближайшие 3 дня</p>
+                    <p><i class="fas fa-credit-card me-2"></i>Оплата на месте (наличные или перевод)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Правая колонка: календарь -->
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>Выберите дату и время</h5>
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                    
+                    <!-- Форма подтверждения -->
+                    <div id="bookingForm" style="display: none;" class="mt-4 p-3 border rounded bg-light">
+                        <h5 class="mb-3">Подтверждение записи</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Мастер:</strong> <span id="confirmMaster"></span></p>
+                                <p><strong>Услуга:</strong> <span id="confirmService"></span></p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Дата:</strong> <span id="confirmDate"></span></p>
+                                <p><strong>Время:</strong> <span id="confirmTime"></span></p>
+                            </div>
+                        </div>
+                        <div class="text-center mt-3">
+                            <button id="confirmBookingBtn" class="btn btn-success me-2">
+                                <i class="fas fa-check me-1"></i>Подтвердить запись
+                            </button>
+                            <button id="cancelBookingBtn" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i>Отмена
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Сообщение об успехе -->
+                    <div id="successMessage" class="alert alert-success mt-4" style="display: none;">
+                        <i class="fas fa-check-circle me-2"></i>Запись успешно создана! Статус: ожидает подтверждения.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        // Переменные для хранения выбранных данных
+        let selectedMasterId = null;
+        let selectedServiceId = null;
+        let selectedDate = null;
+        let selectedTime = null;
+        
+        // Загрузка списка мастеров
+        $.get('/api/masters/', function(data) {
+            let options = '<option value="">-- Выберите мастера --</option>';
+            data.forEach(function(master) {
+                options += `<option value="${master.id}">${master.user.first_name} ${master.user.last_name} (⭐ ${master.rating})</option>`;
+            });
+            $('#masterSelect').html(options);
+        }).fail(function() {
+            alert('Ошибка загрузки мастеров');
+        });
+        
+        // При выборе мастера загружаем его услуги
+        $('#masterSelect').change(function() {
+            selectedMasterId = $(this).val();
+            if (selectedMasterId) {
+                $.get(`/api/masters/${selectedMasterId}/`, function(master) {
+                    let options = '<option value="">-- Выберите услугу --</option>';
+                    if (master.services && master.services.length > 0) {
+                        master.services.forEach(function(service) {
+                            options += `<option value="${service.id}">${service.name} - ${service.price}₽ (${service.duration} мин)</option>`;
+                        });
+                    }
+                    $('#serviceSelect').html(options).prop('disabled', false);
+                }).fail(function() {
+                    alert('Ошибка загрузки услуг');
+                });
+            } else {
+                $('#serviceSelect').html('<option value="">-- Сначала выберите мастера --</option>').prop('disabled', true);
+                selectedServiceId = null;
+            }
+        });
+        
+        // При выборе услуги
+        $('#serviceSelect').change(function() {
+            selectedServiceId = $(this).val();
+        });
+        
+        // Инициализация календаря
+        let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'timeGridWeek,timeGridDay'
+            },
+            locale: 'ru',
+            slotDuration: '00:30:00',
+            slotMinTime: '09:00:00',      // Начало рабочего дня
+            slotMaxTime: '21:00:00',       // Конец рабочего дня
+            allDaySlot: false,
+            selectable: true,
+            selectMirror: true,
+            validRange: function(nowDate) {
+                // Можно выбирать только сегодня и будущие даты
+                return {
+                    start: new Date() // сегодняшняя дата
+                };
+            },
+            select: function(info) {
+                // Проверка выбора мастера и услуги
+                if (!selectedMasterId || !selectedServiceId) {
+                    alert('Сначала выберите мастера и услугу');
+                    calendar.unselect();
+                    return;
+                }
+                
+                selectedDate = info.startStr.split('T')[0];
+                selectedTime = info.startStr.split('T')[1].substring(0, 5);
+                
+                // Заполняем форму подтверждения
+                $('#confirmMaster').text($('#masterSelect option:selected').text());
+                $('#confirmService').text($('#serviceSelect option:selected').text());
+                $('#confirmDate').text(selectedDate);
+                $('#confirmTime').text(selectedTime);
+                $('#bookingForm').show();
+                $('#successMessage').hide();
+            },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                if (!selectedMasterId) {
+                    successCallback([]);
+                    return;
+                }
+                
+                // Получаем свободные слоты для выбранного мастера на текущую неделю
+                let events = [];
+                let startDate = new Date(fetchInfo.start);
+                let endDate = new Date(fetchInfo.end);
+                
+                // Проходим по каждому дню в диапазоне
+                for (let d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
+                    let dateStr = d.toISOString().split('T')[0];
+                    
+                    // Синхронный запрос (можно оптимизировать, но для простоты так)
+                    $.ajax({
+                        url: `/api/available-slots/?master_id=${selectedMasterId}&date=${dateStr}`,
+                        method: 'GET',
+                        async: false,
+                        success: function(data) {
+                            if (data.available_slots) {
+                                data.available_slots.forEach(function(slot) {
+                                    events.push({
+                                        title: 'Свободно',
+                                        start: `${data.date}T${slot}:00`,
+                                        end: `${data.date}T${slot}:30`,
+                                        color: '#28a745', // зеленый
+                                        textColor: 'white'
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+                successCallback(events);
+            },
+            selectable: true,
+            selectOverlap: false, // запретить выбор занятых слотов
+            selectConstraint: {
+                start: '09:00',
+                end: '21:00'
+            }
+        });
+        calendar.render();
+        
+        // Подтверждение бронирования
+        $('#confirmBookingBtn').click(function() {
+            if (!selectedMasterId || !selectedServiceId || !selectedDate || !selectedTime) {
+                alert('Не все данные выбраны');
+                return;
+            }
+            
+            {% if user.is_authenticated %}
+                // Отправляем запрос на создание записи
+                $.ajax({
+                    url: '/api/appointments/',
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    data: JSON.stringify({
+                        master_id: selectedMasterId,
+                        service_id: selectedServiceId,
+                        date: selectedDate,
+                        time: selectedTime,
+                        notes: ''
+                    }),
+                    contentType: 'application/json',
+                    success: function(data) {
+                        $('#bookingForm').hide();
+                        $('#successMessage').show();
+                        calendar.refetchEvents(); // обновить календарь
+                        
+                        // Сброс выбора (опционально)
+                        // selectedMasterId = null;
+                        // selectedServiceId = null;
+                        // $('#masterSelect').val('');
+                        // $('#serviceSelect').html('<option value="">-- Сначала выберите мастера --</option>').prop('disabled', true);
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Ошибка при создании записи';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            errorMsg = xhr.responseJSON.error;
+                        }
+                        alert(errorMsg);
+                    }
+                });
+            {% else %}
+                alert('Для записи необходимо авторизоваться');
+                window.location.href = '{% url "account_login" %}';
+            {% endif %}
+        });
+        
+        // Отмена
+        $('#cancelBookingBtn').click(function() {
+            $('#bookingForm').hide();
+            selectedDate = null;
+            selectedTime = null;
+        });
+    });
+</script>
+{% endblock %}

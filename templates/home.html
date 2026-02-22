@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h1 class="mb-4">Добро пожаловать в наш барбершоп!</h1>
+        <p class="lead">Профессиональные мастера, уютная атмосфера и качественный сервис.</p>
+        <div class="row mt-5">
+            <div class="col-md-4 mb-3"><div class="card h-100"><div class="card-body text-center"><i class="fas fa-cut fa-3x text-primary mb-3"></i><h5>Стрижки</h5><p>Мужские, женские, детские</p></div></div></div>
+            <div class="col-md-4 mb-3"><div class="card h-100"><div class="card-body text-center"><i class="fas fa-tshirt fa-3x text-primary mb-3"></i><h5>Бритье</h5><p>Классическое бритье</p></div></div></div>
+            <div class="col-md-4 mb-3"><div class="card h-100"><div class="card-body text-center"><i class="fas fa-spa fa-3x text-primary mb-3"></i><h5>Уход</h5><p>Уход за бородой</p></div></div></div>
+        </div>
+        <div class="text-center mt-4"><a href="{% url 'booking' %}" class="btn btn-primary btn-lg">Записаться онлайн</a></div>
+    </div>
+    <div class="col-md-4">
+        <div class="card"><div class="card-header bg-primary text-white"><h5>Часы работы</h5></div><div class="card-body"><ul class="list-unstyled"><li>Пн-Пт: 9:00-21:00</li><li>Сб: 10:00-20:00</li><li>Вс: 10:00-18:00</li></ul></div></div>
+        <div class="card mt-3"><div class="card-header bg-primary text-white"><h5>Контакты</h5></div><div class="card-body"><p><i class="fas fa-map-marker-alt"></i> ул. Пушкина, д. 10</p><p><i class="fas fa-phone"></i> +7 (999) 123-45-67</p></div></div>
+    </div>
+</div>
+{% endblock %}

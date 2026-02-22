@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load socialaccount %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header bg-primary text-white text-center py-4">
+                <h4 class="mb-0"><i class="fas fa-sign-in-alt me-2"></i>Вход в личный кабинет</h4>
+            </div>
+            <div class="card-body p-4">
+                <form method="post" action="{% url 'account_login' %}">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {% for error in form.non_field_errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label for="id_login" class="form-label">Email</label>
+                        <input type="email" name="login" class="form-control {% if form.login.errors %}is-invalid{% endif %}" id="id_login" placeholder="Введите email" required>
+                        {% if form.login.errors %}
+                            <div class="invalid-feedback">{{ form.login.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">Пароль</label>
+                        <input type="password" name="password" class="form-control {% if form.password.errors %}is-invalid{% endif %}" id="id_password" placeholder="Введите пароль" required>
+                        {% if form.password.errors %}
+                            <div class="invalid-feedback">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="remember" class="form-check-input" id="id_remember">
+                        <label class="form-check-label" for="id_remember">Запомнить меня</label>
+                    </div>
+                    
+                    {% if redirect_field_value %}
+                        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                    {% endif %}
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Войти</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p>Нет аккаунта? <a href="{% url 'account_signup' %}" class="text-primary">Зарегистрироваться</a></p>
+                    <p><a href="{% url 'account_reset_password' %}" class="text-muted">Забыли пароль?</a></p>
+                </div>
+                
+                {% load socialaccount %}
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
+    <div class="text-center mt-3">
+        <p>или войдите через</p>
+        <div class="d-flex justify-content-center gap-2">
+            {% for provider in socialaccount_providers %}
+                <a href="{% provider_login_url provider.id process='login' %}" class="btn btn-outline-secondary">
+                    {% if provider.id == 'telegram' %}
+                        <i class="fab fa-telegram"></i> Telegram
+                    {% else %}
+                        {{ provider.name }}
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

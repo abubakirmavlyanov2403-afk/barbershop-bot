@@ -1,0 +1,333 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Панель мастера{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Панель мастера</h1>
+            
+            <ul class="nav nav-tabs" id="masterTab" role="tablist">
+                <li class="nav-item text-dark" role="presentation">
+                    <button class="btn-primary me-3" id="appointments-tab" data-bs-toggle="tab" data-bs-target="#appointments" type="button" role="tab">Мои записи</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="btn-primary" id="calendar-tab" data-bs-toggle="tab" data-bs-target="#calendar" type="button" role="tab">Календарь</button>
+                </li>
+            </ul>
+            
+            <div class="tab-content mt-3">
+                <!-- Вкладка с записями (таблица) -->
+                <div class="tab-pane fade show active" id="appointments" role="tabpanel">
+                    <div class="row mb-3">
+                        <div class="col-12 col-md-6">
+                            <button class="btn btn-primary mb-2" id="addRowBtn">
+                                <i class="fas fa-plus"></i> Добавить запись
+                            </button>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="btn-group w-100 w-md-auto" role="group" id="filterGroup">
+                                <button class="btn btn-outline-secondary filter-btn active" data-status="all">Все</button>
+                                <button class="btn btn-outline-warning filter-btn" data-status="pending">Ожидание</button>
+                                <button class="btn btn-outline-success filter-btn" data-status="confirmed">Подтверждено</button>
+                                <button class="btn btn-outline-secondary filter-btn" data-status="completed">Выполнено</button>
+                                <button class="btn btn-outline-danger filter-btn" data-status="cancelled">Отменено</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="appointments-table">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Время</th>
+                                    <th>Клиент</th>
+                                    <th>Телефон</th>
+                                    <th>Услуга</th>
+                                    <th>Статус</th>
+                                    <th>Действия</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Строка для добавления новой записи (скрыта по умолчанию) -->
+                                <tr id="addRow" style="display: none;">
+                                    <td><input type="date" class="form-control form-control-sm" id="newDate" required></td>
+                                    <td><input type="time" class="form-control form-control-sm" id="newTime" required></td>
+                                    <td><input type="text" class="form-control form-control-sm" id="newName" placeholder="Имя" required></td>
+                                    <td><input type="text" class="form-control form-control-sm" id="newPhone" placeholder="+7XXXXXXXXXX" required></td>
+                                    <td>
+                                        <select class="form-select form-select-sm" id="newService" required>
+                                            <option value="">-- Выберите услугу --</option>
+                                        </select>
+                                    </td>
+                                    <td>—</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-success" id="saveNewRow"><i class="fas fa-check"></i></button>
+                                        <button class="btn btn-sm btn-secondary" id="cancelNewRow"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                <!-- Существующие записи будут загружены сюда -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Вкладка с календарём (оставляем как есть) -->
+                <div class="tab-pane fade" id="calendar" role="tabpanel">
+                    <div class="row">
+                        <div class="col-12">
+                            <div id="masterCalendar"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        let masterId = {{ master.id }};
+        let currentFilter = 'all'; // Текущий фильтр
+        
+        // Загрузка услуг мастера для выпадающего списка
+        function loadServices() {
+            $.get(`/api/masters/${masterId}/`, function(master) {
+                let options = '<option value="">-- Выберите услугу --</option>';
+                master.services.forEach(function(service) {
+                    options += `<option value="${service.id}">${service.name} - ${service.price}₽</option>`;
+                });
+                $('#newService').html(options);
+            });
+        }
+        loadServices();
+
+        // Загрузка записей мастера с учётом фильтра
+        function loadAppointments(filter = 'all') {
+            let url = `/api/appointments/?master=${masterId}`;
+            if (filter !== 'all') {
+                url += `&status=${filter}`;
+            }
+            $.get(url, function(data) {
+                let tbody = $('#appointments-table tbody');
+                // Удаляем все строки, кроме строки добавления
+                tbody.find('tr:not(#addRow)').remove();
+                if (data.length === 0) {
+                    tbody.append('<tr class="no-data"><td colspan="7" class="text-center">Нет записей</td></tr>');
+                } else {
+                    data.forEach(function(apt) {
+                        let statusMap = {
+                            'pending': '<span class="badge bg-warning">Ожидание</span>',
+                            'confirmed': '<span class="badge bg-success">Подтверждено</span>',
+                            'completed': '<span class="badge bg-secondary">Выполнено</span>',
+                            'cancelled': '<span class="badge bg-danger">Отменено</span>'
+                        };
+                        let actions = '';
+                        if (apt.status === 'pending') {
+                            actions = `
+                                <button class="btn btn-sm btn-success confirm-booking" data-id="${apt.id}"><i class="fas fa-check"></i></button>
+                                <button class="btn btn-sm btn-danger cancel-booking" data-id="${apt.id}"><i class="fas fa-times"></i></button>
+                            `;
+                        } else if (apt.status === 'confirmed') {
+                            actions = `
+                                <button class="btn btn-sm btn-warning cancel-booking" data-id="${apt.id}"><i class="fas fa-ban"></i></button>
+                                <button class="btn btn-sm btn-secondary complete-booking" data-id="${apt.id}"><i class="fas fa-check-double"></i></button>
+                            `;
+                        } else {
+                            actions = '-';
+                        }
+                        tbody.append(`
+                            <tr>
+                                <td>${apt.date}</td>
+                                <td>${apt.time}</td>
+                                <td>${apt.client.first_name} ${apt.client.last_name}</td>
+                                <td>${apt.client.phone || ''}</td>
+                                <td>${apt.service.name}</td>
+                                <td>${statusMap[apt.status]}</td>
+                                <td>${actions}</td>
+                            </tr>
+                        `);
+                    });
+                }
+                // Перемещаем строку добавления в самый верх
+                let addRow = $('#addRow').detach();
+                tbody.prepend(addRow);
+            });
+        }
+        loadAppointments(currentFilter);
+
+        // Обработка фильтров
+        $('.filter-btn').click(function() {
+            $('.filter-btn').removeClass('active');
+            $(this).addClass('active');
+            currentFilter = $(this).data('status');
+            loadAppointments(currentFilter);
+        });
+
+        // Показать строку добавления
+        $('#addRowBtn').click(function() {
+            $('#addRow').show();
+            let today = new Date().toISOString().split('T')[0];
+            $('#newDate').val(today);
+            $('#newTime').val('10:00');
+        });
+
+        // Скрыть строку добавления (отмена)
+        $('#cancelNewRow').click(function() {
+            $('#addRow').hide();
+            clearAddRow();
+        });
+
+        // Очистить поля строки добавления
+        function clearAddRow() {
+            $('#newDate').val('');
+            $('#newTime').val('');
+            $('#newName').val('');
+            $('#newPhone').val('');
+            $('#newService').val('');
+        }
+
+        // Сохранение новой записи
+        $('#saveNewRow').click(function() {
+            let date = $('#newDate').val();
+            let time = $('#newTime').val();
+            let name = $('#newName').val().trim();
+            let phone = $('#newPhone').val().trim();
+            let serviceId = $('#newService').val();
+
+            if (!date || !time || !name || !phone || !serviceId) {
+                alert('Заполните все поля');
+                return;
+            }
+
+            if (!phone.startsWith('+7') || phone.length !== 12) {
+                alert('Телефон должен быть в формате +7XXXXXXXXXX');
+                return;
+            }
+
+            $.ajax({
+                url: '/api/appointments/',
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                data: JSON.stringify({
+                    master_id: masterId,
+                    service_id: serviceId,
+                    date: date,
+                    time: time,
+                    client_name: name,
+                    client_phone: phone
+                }),
+                contentType: 'application/json',
+                success: function(data) {
+                    $('#addRow').hide();
+                    clearAddRow();
+                    loadAppointments(currentFilter);
+                    calendar.refetchEvents();
+                },
+                error: function(xhr) {
+                    let err = xhr.responseJSON;
+                    alert('Ошибка: ' + (err.error || 'Неизвестная ошибка'));
+                }
+            });
+        });
+
+        // Обработка кнопок в таблице
+        $('#appointments-table').on('click', '.confirm-booking', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: `/api/appointments/${id}/confirm/`,
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function() {
+                    loadAppointments(currentFilter);
+                    calendar.refetchEvents();
+                }
+            });
+        });
+
+        $('#appointments-table').on('click', '.cancel-booking', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: `/api/appointments/${id}/cancel/`,
+                method: 'POST',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                success: function() {
+                    loadAppointments(currentFilter);
+                    calendar.refetchEvents();
+                }
+            });
+        });
+
+        $('#appointments-table').on('click', '.complete-booking', function() {
+            let id = $(this).data('id');
+            $.ajax({
+                url: `/api/appointments/${id}/`,
+                method: 'PATCH',
+                headers: {'X-CSRFToken': '{{ csrf_token }}'},
+                data: JSON.stringify({status: 'completed'}),
+                contentType: 'application/json',
+                success: function() {
+                    loadAppointments(currentFilter);
+                    calendar.refetchEvents();
+                }
+            });
+        });
+
+        // Календарь (FullCalendar) – responsive
+        let calendarEl = document.getElementById('masterCalendar');
+        let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek', // mobil uchun kunlik ko'rinish
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: window.innerWidth < 768 ? 'timeGridDay' : 'timeGridWeek,timeGridDay'
+            },
+            locale: 'ru',
+            slotDuration: '00:30:00',
+            slotMinTime: '09:00:00',
+            slotMaxTime: '21:00:00',
+            allDaySlot: false,
+            selectable: true,
+            select: function(info) {
+                $('#newDate').val(info.startStr.split('T')[0]);
+                $('#newTime').val(info.startStr.split('T')[1].substring(0,5));
+                $('#addRow').show();
+                $('#appointments-tab').tab('show');
+            },
+            events: function(fetchInfo, successCallback, failureCallback) {
+                $.get(`/api/appointments/?master=${masterId}`, function(data) {
+                    let events = [];
+                    data.forEach(function(apt) {
+                        let color = '#28a745';
+                        if (apt.status === 'pending') color = '#ffc107';
+                        else if (apt.status === 'confirmed') color = '#007bff';
+                        else if (apt.status === 'completed') color = '#6c757d';
+                        else if (apt.status === 'cancelled') color = '#dc3545';
+                        events.push({
+                            title: `${apt.client.first_name} - ${apt.service.name}`,
+                            start: `${apt.date}T${apt.time}`,
+                            color: color
+                        });
+                    });
+                    successCallback(events);
+                }).fail(failureCallback);
+            }
+        });
+        calendar.render();
+
+        // Ekran o'lchami o'zgarganda kalendar view ni o'zgartirish
+        $(window).resize(function() {
+            if (window.innerWidth < 768) {
+                calendar.changeView('timeGridDay');
+            } else {
+                calendar.changeView('timeGridWeek');
+            }
+        });
+    });
+</script>
+{% endblock %}

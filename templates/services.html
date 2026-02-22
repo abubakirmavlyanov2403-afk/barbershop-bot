@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Услуги{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Наши услуги</h1>
+    
+    <div class="row" id="servicesList">
+        <div class="col-12 text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $.get('/api/services/', function(data) {
+            let html = '';
+            data.forEach(function(service) {
+                html += `
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">${service.name}</h5>
+                            <p class="card-text">${service.description || 'Описание услуги'}</p>
+                            <p class="card-text"><strong>Длительность:</strong> ${service.duration} мин</p>
+                            <p class="card-text"><strong>Цена:</strong> ${service.price} ₽</p>
+                            <a href="/booking/?service=${service.id}" class="btn btn-primary">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            $('#servicesList').html(html);
+        });
+    });
+</script>
+{% endblock %}

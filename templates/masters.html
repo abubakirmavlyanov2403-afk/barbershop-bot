@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Наши мастера{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="mb-4">Наши мастера</h1>
+    
+    <div class="row" id="mastersList">
+        <div class="col-12 text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Загрузка...</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $.get('/api/masters/', function(data) {
+            let html = '';
+            data.forEach(function(master) {
+                html += `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100">
+                        <img src="${master.user.avatar || 'https://via.placeholder.com/300x200?text=Master'}" class="card-img-top" alt="${master.user.first_name}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title">${master.user.first_name} ${master.user.last_name}</h5>
+                            <p class="card-text">${master.bio || 'Опытный мастер'}</p>
+                            <p><strong>Опыт:</strong> ${master.experience} лет</p>
+                            <p><strong>Рейтинг:</strong> ⭐ ${master.rating} (${master.reviews_count} отзывов)</p>
+                            <p><strong>Услуги:</strong></p>
+                            <ul>
+                `;
+                master.services.forEach(function(service) {
+                    html += `<li>${service.name} - ${service.price}₽</li>`;
+                });
+                html += `
+                            </ul>
+                            <a href="/booking/?master=${master.id}" class="btn btn-primary">Записаться</a>
+                        </div>
+                    </div>
+                </div>
+                `;
+            });
+            $('#mastersList').html(html);
+        });
+    });
+</script>
+{% endblock %}

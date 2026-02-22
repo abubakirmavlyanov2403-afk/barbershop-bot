@@ -1,0 +1,9 @@
+from django.core.management.base import BaseCommand
+from telegrambot.bot import main
+
+class Command(BaseCommand):
+    help = 'Telegram botni ishga tushirish'
+
+    def handle(self, *args, **options):
+        self.stdout.write(self.style.SUCCESS('Bot ishga tushyapti...'))
+        main()
