@@ -1,0 +1,116 @@
+Bot ishga tushyapti...
+2026-02-22 21:10:16,246 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,248 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,298 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,298 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,352 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,353 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,403 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,404 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,458 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,458 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,508 - httpx - DEBUG - load_ssl_context verify=True cert=None trust_env=True http2=False
+2026-02-22 21:10:16,509 - httpx - DEBUG - load_verify_locations cafile='/home/creativebarbershop/.virtualenvs/barbershop_env/lib/python3.10/site-packages/certifi/cacert.pem'
+2026-02-22 21:10:16,559 - telegrambot.bot - INFO - Bot ishga tushdi...
+2026-02-22 21:10:16,560 - asyncio - DEBUG - Using selector: EpollSelector
+2026-02-22 21:10:16,560 - telegram.ext.ExtBot - DEBUG - Entering: get_me
+2026-02-22 21:10:16,567 - httpcore.connection - DEBUG - connect_tcp.started host='proxy.server' port=3128 local_address=None timeout=5.0 socket_options=None
+2026-02-22 21:10:16,568 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf39677fa0>
+2026-02-22 21:10:16,569 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:16,569 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:16,569 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:16,569 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:16,569 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:16,653 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'Connection established', [])
+2026-02-22 21:10:16,653 - httpcore.proxy - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7caf39cd2240> server_hostname='api.telegram.org' timeout=5.0
+2026-02-22 21:10:16,742 - httpcore.proxy - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf396b9cc0>
+2026-02-22 21:10:16,742 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:16,743 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:16,743 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-02-22 21:10:16,743 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:16,743 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:16,828 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 22 Feb 2026 18:10:16 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'340'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2026-02-22 21:10:16,828 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8517155781:AAEC0x2RM2XCz7_fg5uDixs0omyEtBhlopc/getMe "HTTP/1.1 200 OK"
+2026-02-22 21:10:16,829 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2026-02-22 21:10:16,829 - httpcore.http11 - DEBUG - receive_response_body.complete
+2026-02-22 21:10:16,829 - httpcore.http11 - DEBUG - response_closed.started
+2026-02-22 21:10:16,829 - httpcore.http11 - DEBUG - response_closed.complete
+2026-02-22 21:10:16,829 - telegram.ext.ExtBot - DEBUG - User(api_kwargs={'can_connect_to_business': False, 'has_main_web_app': False, 'has_topics_enabled': False, 'allows_users_to_create_topics': False}, can_join_groups=True, can_read_all_group_messages=False, first_name='creative_barbershop_bot', id=8517155781, is_bot=True, supports_inline_queries=False, username='BarbershopCreative_bot')
+2026-02-22 21:10:16,830 - telegram.ext.ExtBot - DEBUG - Exiting: get_me
+2026-02-22 21:10:16,830 - telegram.ext.ExtBot - DEBUG - This Bot is already initialized.
+2026-02-22 21:10:16,830 - telegram.ext.ExtBot - DEBUG - Entering: set_my_commands
+2026-02-22 21:10:16,830 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:16,831 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:16,831 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-02-22 21:10:16,831 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:16,831 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:16,931 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 22 Feb 2026 18:10:16 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'25'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2026-02-22 21:10:16,931 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8517155781:AAEC0x2RM2XCz7_fg5uDixs0omyEtBhlopc/setMyCommands "HTTP/1.1 200 OK"
+2026-02-22 21:10:16,931 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2026-02-22 21:10:16,932 - httpcore.http11 - DEBUG - receive_response_body.complete
+2026-02-22 21:10:16,932 - httpcore.http11 - DEBUG - response_closed.started
+2026-02-22 21:10:16,932 - httpcore.http11 - DEBUG - response_closed.complete
+2026-02-22 21:10:16,932 - telegram.ext.ExtBot - DEBUG - True
+2026-02-22 21:10:16,932 - telegram.ext.ExtBot - DEBUG - Exiting: set_my_commands
+2026-02-22 21:10:16,932 - telegram.ext.Updater - DEBUG - Updater started (polling)
+2026-02-22 21:10:16,932 - telegram.ext.Updater - DEBUG - Start network loop retry bootstrap del webhook
+2026-02-22 21:10:16,932 - telegram.ext.Updater - DEBUG - Deleting webhook
+2026-02-22 21:10:16,932 - telegram.ext.ExtBot - DEBUG - Entering: delete_webhook
+2026-02-22 21:10:16,933 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:16,933 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:16,933 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-02-22 21:10:16,933 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:16,933 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:17,018 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Server', b'nginx/1.18.0'), (b'Date', b'Sun, 22 Feb 2026 18:10:16 GMT'), (b'Content-Type', b'application/json'), (b'Content-Length', b'68'), (b'Connection', b'keep-alive'), (b'Strict-Transport-Security', b'max-age=31536000; includeSubDomains; preload'), (b'Access-Control-Allow-Origin', b'*'), (b'Access-Control-Allow-Methods', b'GET, POST, OPTIONS'), (b'Access-Control-Expose-Headers', b'Content-Length,Content-Type,Date,Server,Connection')])
+2026-02-22 21:10:17,018 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8517155781:AAEC0x2RM2XCz7_fg5uDixs0omyEtBhlopc/deleteWebhook "HTTP/1.1 200 OK"
+2026-02-22 21:10:17,018 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2026-02-22 21:10:17,018 - httpcore.http11 - DEBUG - receive_response_body.complete
+2026-02-22 21:10:17,018 - httpcore.http11 - DEBUG - response_closed.started
+2026-02-22 21:10:17,018 - httpcore.http11 - DEBUG - response_closed.complete
+2026-02-22 21:10:17,019 - telegram.ext.ExtBot - DEBUG - True
+2026-02-22 21:10:17,019 - telegram.ext.ExtBot - DEBUG - Exiting: delete_webhook
+2026-02-22 21:10:17,019 - telegram.ext.Updater - DEBUG - Bootstrap done
+2026-02-22 21:10:17,019 - telegram.ext.Updater - DEBUG - Waiting for polling to start
+2026-02-22 21:10:17,019 - telegram.ext.Updater - DEBUG - Polling updates from Telegram started
+2026-02-22 21:10:17,019 - telegram.ext.Updater - DEBUG - Start network loop retry getting Updates
+2026-02-22 21:10:17,019 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2026-02-22 21:10:17,020 - telegram.ext.Application - INFO - Application started
+2026-02-22 21:10:17,020 - httpcore.connection - DEBUG - connect_tcp.started host='proxy.server' port=3128 local_address=None timeout=5.0 socket_options=None
+2026-02-22 21:10:17,021 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf39675b10>
+2026-02-22 21:10:17,021 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:17,021 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:17,021 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:17,022 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:17,022 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:17,106 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'Connection established', [])
+2026-02-22 21:10:17,107 - httpcore.proxy - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7caf39cd23c0> server_hostname='api.telegram.org' timeout=5.0
+2026-02-22 21:10:17,194 - httpcore.proxy - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf39675ea0>
+2026-02-22 21:10:17,195 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:17,195 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:17,195 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-02-22 21:10:17,195 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:17,195 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:19,560 - telegram.ext.Application - DEBUG - Application received stop signal. Shutting down.
+2026-02-22 21:10:19,561 - telegram.ext.Updater - DEBUG - Stopping Updater
+2026-02-22 21:10:19,561 - telegram.ext.Updater - DEBUG - Waiting background polling task to finish up.
+2026-02-22 21:10:19,561 - httpcore.http11 - DEBUG - receive_response_headers.failed exception=CancelledError()
+2026-02-22 21:10:19,561 - httpcore.http11 - DEBUG - response_closed.started
+2026-02-22 21:10:19,561 - httpcore.http11 - DEBUG - response_closed.complete
+2026-02-22 21:10:19,561 - telegram.ext.Updater - DEBUG - Network loop retry getting Updates was cancelled
+2026-02-22 21:10:19,562 - telegram.ext.Updater - DEBUG - Calling `get_updates` one more time to mark all fetched updates as read.
+2026-02-22 21:10:19,562 - telegram.ext.ExtBot - DEBUG - Entering: get_updates
+2026-02-22 21:10:19,562 - httpcore.connection - DEBUG - connect_tcp.started host='proxy.server' port=3128 local_address=None timeout=5.0 socket_options=None
+2026-02-22 21:10:19,563 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf396bbf70>
+2026-02-22 21:10:19,564 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:19,564 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:19,564 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:19,564 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:19,564 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'CONNECT']>
+2026-02-22 21:10:19,648 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'Connection established', [])
+2026-02-22 21:10:19,648 - httpcore.proxy - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x7caf39cd23c0> server_hostname='api.telegram.org' timeout=5.0
+2026-02-22 21:10:19,735 - httpcore.proxy - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x7caf396bbd00>
+2026-02-22 21:10:19,735 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2026-02-22 21:10:19,736 - httpcore.http11 - DEBUG - send_request_headers.complete
+2026-02-22 21:10:19,736 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2026-02-22 21:10:19,736 - httpcore.http11 - DEBUG - send_request_body.complete
+2026-02-22 21:10:19,736 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
