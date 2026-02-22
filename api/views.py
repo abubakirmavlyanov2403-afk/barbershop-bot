@@ -35,7 +35,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 class ServiceViewSet(viewsets.ModelViewSet):
     queryset = Service.objects.filter(is_active=True)
     serializer_class = ServiceSerializer
-    @action(detail=False, methods=['get'], url_path='by-category/(?P<category_id>\d+)')
+    @action(detail=False, methods=['get'], url_path='by-category/(?P<category_id>\\d+)')
     def by_category(self, request, category_id=None):
         services = self.queryset.filter(category_id=category_id)
         serializer = self.get_serializer(services, many=True)
@@ -206,4 +206,5 @@ class AvailableSlotsView(APIView):
         except ValueError:
             return Response({'error':'Invalid date format'}, status=400)
         slots = get_available_slots(master_id, date)
+
         return Response({'master_id':master_id, 'date':date_str, 'available_slots':slots})
